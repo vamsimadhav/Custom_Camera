@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Custom_Camera</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="enter_your_name">Enter your Name</string>
+    <string name="enter_your_email_address">Enter your Email Address</string>
+    <string name="test_button">Test Button</string>
+</resources>
