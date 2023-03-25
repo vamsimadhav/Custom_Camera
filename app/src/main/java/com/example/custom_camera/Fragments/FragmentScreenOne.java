@@ -1,9 +1,14 @@
 package com.example.custom_camera.Fragments;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Bundle;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,9 +29,10 @@ import java.util.ArrayList;
 
 public class FragmentScreenOne extends Fragment {
 
-    private Button testButton;
     private TextInputLayout nameInput;
     private TextInputLayout emailInput;
+
+    private static final int REQUEST_CAMERA_PERMISSION = 1;
 
     public FragmentScreenOne() {
         // Required empty public constructor
@@ -46,7 +52,7 @@ public class FragmentScreenOne extends Fragment {
 
         nameInput = rootView.findViewById(R.id.userNameTextLayout);
         emailInput = rootView.findViewById(R.id.userEmailTextLayout);
-        testButton = rootView.findViewById(R.id.testButton);
+        Button testButton = rootView.findViewById(R.id.testButton);
 
         EditText nameEdit = nameInput.getEditText();
         assert nameEdit != null;
@@ -105,24 +111,45 @@ public class FragmentScreenOne extends Fragment {
                 String name = nameEdit.getText().toString();
                 String email = emailEdit.getText().toString();
 
-                if (userArrayData.isEmpty()) {
-                    UserData userData = new UserData(name,email);
-                    databaseHelper.userDataDAO().addUserData(userData);
+                if (name.isEmpty() || email.isEmpty()) {
+                    nameEdit.setError("Fill all details");
+                    emailEdit.setError("Fill all details");
                 } else {
-                    boolean alreadyExists = false;
-                    for (int i=0; i<userArrayData.size(); i++) {
-                        if (email.equals(userArrayData.get(i).getEmail().toString())) {
-                            alreadyExists = true;
-                        }
-                    }
-                    if (!alreadyExists) {
+                    if (userArrayData.isEmpty()) {
                         UserData userData = new UserData(name,email);
                         databaseHelper.userDataDAO().addUserData(userData);
+                    } else {
+                        boolean alreadyExists = false;
+                        for (int i=0; i<userArrayData.size(); i++) {
+                            if (email.equals(userArrayData.get(i).getEmail().toString())) {
+                                alreadyExists = true;
+                            }
+                        }
+                        if (!alreadyExists) {
+                            UserData userData = new UserData(name,email);
+                            databaseHelper.userDataDAO().addUserData(userData);
+                        }
                     }
+                    Navigation.findNavController(view).navigate(R.id.fragmentScreenTwo);
                 }
+
+
+
+//                if (allPermissionsGranted()) {
+//                    Navigation.findNavController(view).navigate(R.id.fragmentScreenTwo);
+//                } else {
+//                    ActivityCompat.requestPermissions(
+//                            requireActivity(), new String[]{Manifest.permission.CAMERA},
+//                            REQUEST_CAMERA_PERMISSION);
+//                }
             }
         });
 
         return rootView;
+    }
+
+    private boolean allPermissionsGranted() {
+        return ContextCompat.checkSelfPermission(
+                requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
     }
 }

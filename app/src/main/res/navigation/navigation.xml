@@ -16,9 +16,9 @@
     </fragment>
     <fragment
         android:id="@+id/fragmentScreenTwo"
-        android:name="com.example.custom_camera.Fragments.FragmentScreenTwo"
+        android:name="com.example.custom_camera.Fragments.CameraFragment"
         android:label="fragment_screen_two"
-        tools:layout="@layout/fragment_screen_two" >
+        tools:layout="@layout/fragment_camera" >
         <action
             android:id="@+id/action_fragmentScreenTwo_to_fragmentScreenThree"
             app:destination="@id/fragmentScreenThree" />
