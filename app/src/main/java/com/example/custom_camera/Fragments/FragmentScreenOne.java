@@ -132,16 +132,6 @@ public class FragmentScreenOne extends Fragment {
                     }
                     Navigation.findNavController(view).navigate(R.id.fragmentScreenTwo);
                 }
-
-
-
-//                if (allPermissionsGranted()) {
-//                    Navigation.findNavController(view).navigate(R.id.fragmentScreenTwo);
-//                } else {
-//                    ActivityCompat.requestPermissions(
-//                            requireActivity(), new String[]{Manifest.permission.CAMERA},
-//                            REQUEST_CAMERA_PERMISSION);
-//                }
             }
         });
 

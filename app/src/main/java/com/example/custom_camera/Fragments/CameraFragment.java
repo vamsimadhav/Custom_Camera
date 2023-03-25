@@ -23,6 +23,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.os.Environment;
 import android.os.Handler;
@@ -54,8 +55,8 @@ import java.util.concurrent.ExecutionException;
 public class CameraFragment extends Fragment {
 
     private static final String TAG = "CameraFragment";
-    private static final Integer ISO_VALUE = -900;
-    private Button takePictureButton;
+    private static final Integer ISO_VALUE = 100;
+    public Button takePictureButton;
     private TextureView textureView;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     static {
@@ -67,7 +68,6 @@ public class CameraFragment extends Fragment {
     private String cameraId;
     protected CameraDevice cameraDevice;
     protected CameraCaptureSession cameraCaptureSessions;
-    protected CaptureRequest captureRequest;
     protected CaptureRequest.Builder captureRequestBuilder;
     private Size imageDimension;
     private ImageReader imageReader;
@@ -97,6 +97,7 @@ public class CameraFragment extends Fragment {
         takePictureButton = rootView.findViewById(R.id.btn_takepicture);
         assert takePictureButton != null;
         takePictureButton.setOnClickListener(v -> takePicture());
+//        takePictureButton.setVisibility(View.GONE);
 
         return rootView;
     }
@@ -137,15 +138,6 @@ public class CameraFragment extends Fragment {
         public void onError(CameraDevice camera, int error) {
             cameraDevice.close();
             cameraDevice = null;
-        }
-    };
-
-    final CameraCaptureSession.CaptureCallback captureCallbackListener = new CameraCaptureSession.CaptureCallback() {
-        @Override
-        public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
-            super.onCaptureCompleted(session, request, result);
-            Toast.makeText(requireContext(), "Saved:" + file, Toast.LENGTH_SHORT).show();
-            createCameraPreview();
         }
     };
 
@@ -285,6 +277,7 @@ public class CameraFragment extends Fragment {
 // When the session is ready, we start displaying the preview.
                     cameraCaptureSessions = cameraCaptureSession;
                     updatePreview();
+                   /* takePicture();*/
                 }
                 @Override
                 public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
@@ -361,7 +354,7 @@ public class CameraFragment extends Fragment {
     @Override
     public void onPause() {
         Log.e(TAG, "onPause");
-//closeCamera();
+        closeCamera();
         stopBackgroundThread();
         super.onPause();
     }
