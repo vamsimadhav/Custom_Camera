@@ -19,31 +19,12 @@
         android:label="fragment_screen_two"
         tools:layout="@layout/fragment_screen_two" >
         <action
-            android:id="@+id/action_fragmentScreenTwo_to_cameraFragment"
-            app:destination="@id/cameraFragment" />
-        <action
-            android:id="@+id/action_fragmentScreenTwo_to_fragmentScreenThree22"
-            app:destination="@id/fragmentScreenThree2" />
+            android:id="@+id/action_fragmentScreenTwo_to_cameraActivityTwo"
+            app:destination="@id/cameraActivityTwo" />
     </fragment>
-    <fragment
-        android:id="@+id/cameraFragment"
-        android:name="com.example.custom_camera.Fragments.CameraFragment"
-        android:label="fragment_camera"
-        tools:layout="@layout/fragment_camera" >
-        <action
-            android:id="@+id/action_cameraFragment_to_fragmentScreenTwo"
-            app:destination="@id/fragmentScreenTwo" />
-        <action
-            android:id="@+id/action_cameraFragment_to_fragmentScreenThree2"
-            app:destination="@id/fragmentScreenThree2" />
-    </fragment>
-    <fragment
-        android:id="@+id/fragmentScreenThree2"
-        android:name="com.example.custom_camera.Fragments.FragmentScreenThree"
-        android:label="fragment_screen_three"
-        tools:layout="@layout/fragment_screen_three" >
-        <action
-            android:id="@+id/action_fragmentScreenThree2_to_cameraFragment"
-            app:destination="@id/cameraFragment" />
-    </fragment>
+    <activity
+        android:id="@+id/cameraActivityTwo"
+        android:name="com.example.custom_camera.Activitys.CameraActivityTwo"
+        android:label="activity_camera_two"
+        tools:layout="@layout/activity_camera_two" />
 </navigation>
