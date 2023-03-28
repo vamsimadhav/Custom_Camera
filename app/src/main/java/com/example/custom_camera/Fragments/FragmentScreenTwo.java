@@ -1,22 +1,20 @@
 package com.example.custom_camera.Fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
-
+import android.view.View;
+import android.widget.Button;
+import android.view.ViewGroup;
+import com.example.custom_camera.R;
+import android.view.LayoutInflater;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-
-import com.example.custom_camera.Activitys.CameraActivityTwo;
-import com.example.custom_camera.R;
 public class FragmentScreenTwo extends Fragment {
     public FragmentScreenTwo() {
         // Required empty public constructor
     }
+
+    boolean isNextScreen = true;
 
 
     @Override
@@ -33,9 +31,14 @@ public class FragmentScreenTwo extends Fragment {
         gotoCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigation.findNavController(view).navigate(R.id.cameraActivityTwo);
+               if (isNextScreen) {
+                   Navigation.findNavController(view).navigate(R.id.cameraActivityThree);
+               } else {
+                   Navigation.findNavController(view).navigate(R.id.cameraActivityTwo);
+               }
             }
         });
+
         return rootView;
     }
 }

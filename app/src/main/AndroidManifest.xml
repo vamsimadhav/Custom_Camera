@@ -15,6 +15,9 @@
         android:theme="@style/Theme.Custom_Camera"
         tools:targetApi="31">
         <activity
+            android:name=".Activitys.CameraActivityThree"
+            android:exported="false" />
+        <activity
             android:name=".Activitys.CameraActivityTwo"
             android:exported="false" />
         <activity

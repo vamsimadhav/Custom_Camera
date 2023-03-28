@@ -1,20 +1,19 @@
 package com.example.custom_camera.Activitys;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.custom_camera.Camera.Configurations.CameraFacing;
-import com.example.custom_camera.Camera.Configurations.CameraFocus;
-import com.example.custom_camera.Camera.Configurations.CameraImageFormat;
-import com.example.custom_camera.Camera.Configurations.CameraResolution;
-import com.example.custom_camera.Camera.Configurations.CameraRotation;
+import com.example.custom_camera.Camera.Configurations.*;
 import com.example.custom_camera.Camera.Helper.HiddenCameraUtils;
 import com.example.custom_camera.Camera.HiddenCameraActivity;
 import com.example.custom_camera.Camera.Model.CameraCharacteristics;
@@ -22,31 +21,29 @@ import com.example.custom_camera.Camera.Model.CameraError;
 import com.example.custom_camera.R;
 
 import java.io.File;
+import java.util.ArrayList;
 
-public class CameraActivityTwo extends HiddenCameraActivity {
+public class CameraActivityThree extends HiddenCameraActivity {
 
     private static final int REQ_CODE_CAMERA_PERMISSION = 1253;
-    private CameraCharacteristics mCameraCharacteristics;
+    private ArrayList<CameraCharacteristics> mCameraCharacteristicsList = new ArrayList<>();
+    private int mCurrentIndex = 0;
+    private static final String text = "Capturing Image for Exposure: ";
+    private TextView exposureText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_camera_two);
+        setContentView(R.layout.activity_camera_three);
 
-        mCameraCharacteristics = new CameraCharacteristics()
-                .getBuilder(this)
-                .setCameraFacing(CameraFacing.REAR_FACING_CAMERA)
-                .setCameraResolution(CameraResolution.HIGH_RESOLUTION)
-                .setImageFormat(CameraImageFormat.FORMAT_JPEG)
-                .setImageRotation(CameraRotation.ROTATION_90)
-                .setCameraFocus(CameraFocus.AUTO)
-                .setCameraIso(100)
-                .build();
+        mCameraCharacteristicsList = buildParameters();
 
-//        /Check for the camera permission for the runtime
+        exposureText = findViewById(R.id.exposureText);
+
+        //        /Check for the camera permission for the runtime
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
-            startCamera(mCameraCharacteristics);
+            startCamera(mCameraCharacteristicsList.get(mCurrentIndex));
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
                     REQ_CODE_CAMERA_PERMISSION);
@@ -70,13 +67,18 @@ public class CameraActivityTwo extends HiddenCameraActivity {
         if (requestCode == REQ_CODE_CAMERA_PERMISSION) {
 
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startCamera(mCameraCharacteristics);
+                startCamera(mCameraCharacteristicsList.get(mCurrentIndex));
             } else {
                 Toast.makeText(this, R.string.error_camera_permission_denied, Toast.LENGTH_LONG).show();
             }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+    }
+
+    @Override
+    public void onImageCapture(@NonNull File imageFile) {
+
     }
 
     @Override
@@ -108,12 +110,35 @@ public class CameraActivityTwo extends HiddenCameraActivity {
     }
 
     @Override
-    public void onImageCapture(@NonNull File imageFile) {
-
+    public void onSaveCompletion(boolean isSaved) {
+        exposureText.setText(text + mCameraCharacteristicsList.get(mCurrentIndex).getCameraExposure());
+        mCurrentIndex++;
+        if (mCurrentIndex < mCameraCharacteristicsList.size()) {
+            try {
+                startCamera(mCameraCharacteristicsList.get(mCurrentIndex));
+                takePicture();
+            } catch (SecurityException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
-    @Override
-    public void onSaveCompletion(boolean isSaved) {
-        finish();
+    private ArrayList<CameraCharacteristics> buildParameters() {
+        ArrayList<CameraCharacteristics> list = new ArrayList<>();
+
+        for (int i= -12; i<= 12; i++) {
+            CameraCharacteristics characteristics = new CameraCharacteristics()
+                    .getBuilder(this)
+                    .setCameraFacing(CameraFacing.REAR_FACING_CAMERA)
+                    .setCameraResolution(CameraResolution.HIGH_RESOLUTION)
+                    .setImageFormat(CameraImageFormat.FORMAT_JPEG)
+                    .setImageRotation(CameraRotation.ROTATION_90)
+                    .setCameraFocus(CameraFocus.AUTO)
+                    .setCameraExposure(i)
+                    .build();
+
+            list.add(characteristics);
+        }
+        return list;
     }
 }

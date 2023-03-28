@@ -21,10 +21,25 @@
         <action
             android:id="@+id/action_fragmentScreenTwo_to_cameraActivityTwo"
             app:destination="@id/cameraActivityTwo" />
+        <action
+            android:id="@+id/action_fragmentScreenTwo_to_fragmentScreenThree"
+            app:destination="@id/fragmentScreenThree" />
     </fragment>
     <activity
         android:id="@+id/cameraActivityTwo"
         android:name="com.example.custom_camera.Activitys.CameraActivityTwo"
         android:label="activity_camera_two"
         tools:layout="@layout/activity_camera_two" />
+    <fragment
+        android:id="@+id/fragmentScreenThree"
+        android:name="com.example.custom_camera.Fragments.FragmentScreenThree"
+        android:label="FragmentScreenThree" >
+        <action
+            android:id="@+id/action_fragmentScreenThree_to_cameraActivityThree"
+            app:destination="@id/cameraActivityThree" />
+    </fragment>
+    <activity
+        android:id="@+id/cameraActivityThree"
+        android:name="com.example.custom_camera.Activitys.CameraActivityThree"
+        android:label="CameraActivityThree" />
 </navigation>

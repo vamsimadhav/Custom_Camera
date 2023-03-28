@@ -29,7 +29,7 @@ public class CameraCharacteristics {
     @CameraFocus.SupportedCameraFocus
     private int mCameraFocus = CameraFocus.AUTO;
 
-//    @CameraExposure.SupportedExposure
+    @CameraExposure.SupportedExposure
     private int mCameraExposure = CameraExposure.DEFAULT_EXPOSURE;
 
     private int mCameraIso = CameraIso.DEFAULT_ISO;
@@ -105,11 +105,12 @@ public int getCameraExposure() { return mCameraExposure;}
 
         public Builder setCameraExposure( int exposure) {
             //Validate Input
-            if (exposure > CameraExposure.MAX_EXPOSURE || exposure < CameraExposure.MIN_EXPOSURE) {
+            if (exposure <= CameraExposure.MAX_EXPOSURE && exposure >= CameraExposure.MIN_EXPOSURE) {
+                mCameraExposure = exposure;
+                return this;
+            } else {
                 throw  new RuntimeException("Invalid Camera Exposure");
             }
-            mCameraExposure = exposure;
-            return this;
         }
 
         public Builder setCameraIso(int iso) {
