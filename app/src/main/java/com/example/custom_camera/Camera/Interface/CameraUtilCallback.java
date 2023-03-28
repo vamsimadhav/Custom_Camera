@@ -8,4 +8,6 @@ public interface CameraUtilCallback {
     void onImageCapture(@NonNull File imageFile);
     void onCameraError(@CameraError.CameraErrorCodes int errorCodes);
     void onSaveCompletion(boolean isSaved);
+
+    void sendDataToAPI(boolean sendData);
 }

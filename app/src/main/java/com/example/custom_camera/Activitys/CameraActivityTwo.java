@@ -7,6 +7,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -22,6 +23,8 @@ import com.example.custom_camera.Camera.Model.CameraError;
 import com.example.custom_camera.R;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CameraActivityTwo extends HiddenCameraActivity {
 
@@ -115,5 +118,10 @@ public class CameraActivityTwo extends HiddenCameraActivity {
     @Override
     public void onSaveCompletion(boolean isSaved) {
         finish();
+    }
+
+    @Override
+    public void sendDataToAPI(boolean sendData) {
+//        Do nothing
     }
 }

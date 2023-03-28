@@ -2,35 +2,29 @@ package com.example.custom_camera.Fragments;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.hardware.Camera;
 import android.os.Bundle;
-
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
-
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-
 import com.example.custom_camera.DatabaseHelper;
 import com.example.custom_camera.Helpers.Utils;
 import com.example.custom_camera.R;
 import com.example.custom_camera.UserData;
 import com.google.android.material.textfield.TextInputLayout;
-
 import java.util.ArrayList;
 
 public class FragmentScreenOne extends Fragment {
 
     private TextInputLayout nameInput;
     private TextInputLayout emailInput;
+//    RequestQueue requestQueue;
 
     private static final int REQUEST_CAMERA_PERMISSION = 1;
 

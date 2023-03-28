@@ -9,19 +9,40 @@ import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
+//
+//import com.android.volley.AuthFailureError;
+//import com.android.volley.Request;
+//import com.android.volley.RequestQueue;
+//import com.android.volley.Response;
+//import com.android.volley.VolleyError;
+//import com.android.volley.toolbox.JsonObjectRequest;
+//import com.android.volley.toolbox.StringRequest;
+//import com.android.volley.toolbox.Volley;
 import com.example.custom_camera.Camera.Configurations.*;
 import com.example.custom_camera.Camera.Helper.HiddenCameraUtils;
 import com.example.custom_camera.Camera.HiddenCameraActivity;
 import com.example.custom_camera.Camera.Model.CameraCharacteristics;
 import com.example.custom_camera.Camera.Model.CameraError;
+import com.example.custom_camera.Networking.APICaller;
+import com.example.custom_camera.Networking.Models.User;
+import com.example.custom_camera.Networking.Models.UserTokens;
+import com.example.custom_camera.Networking.RetrofitClient;
 import com.example.custom_camera.R;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CameraActivityThree extends HiddenCameraActivity {
 
@@ -30,6 +51,7 @@ public class CameraActivityThree extends HiddenCameraActivity {
     private int mCurrentIndex = 0;
     private static final String text = "Capturing Image for Exposure: ";
     private TextView exposureText;
+    private UserTokens userTokens;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +143,30 @@ public class CameraActivityThree extends HiddenCameraActivity {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    @Override
+    public void sendDataToAPI(boolean sendData) {
+        APICaller apiCaller = RetrofitClient.getInstance().create(APICaller.class);
+        Call<User> call = apiCaller.getSignInInfo("amit_4@test.com","12345678");
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                userTokens = new UserTokens(
+                        response.headers().get("Content-Type"),
+                        response.headers().get("access-token"),
+                        response.headers().get("uid"),
+                        response.headers().get("client")
+                );
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.e("onFailure ",t.getMessage());
+            }
+        });
+
+
     }
 
     private ArrayList<CameraCharacteristics> buildParameters() {

@@ -3,6 +3,7 @@ package com.example.custom_camera.Camera;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -13,6 +14,7 @@ import android.view.SurfaceView;
 
 import androidx.annotation.NonNull;
 
+import com.example.custom_camera.Camera.Configurations.CameraExposure;
 import com.example.custom_camera.Camera.Configurations.CameraResolution;
 import com.example.custom_camera.Camera.Configurations.CameraRotation;
 import com.example.custom_camera.Camera.Helper.HiddenCameraUtils;
@@ -144,7 +146,7 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
                 try {
                     mCamera.setPreviewDisplay(mHolder);
                     mCamera.startPreview();
-                    surfaceChanged(mHolder,0, mHolder.getSurfaceFrame().width(), mHolder.getSurfaceFrame().height());
+                    surfaceChanged(mHolder, PixelFormat.RGBA_8888, mHolder.getSurfaceFrame().width(), mHolder.getSurfaceFrame().height());
                 } catch (IOException e) {
                     e.printStackTrace();
                     mCameraCallbacks.onCameraError(CameraError.ERROR_CAMERA_OPEN_FAILED);
@@ -219,6 +221,9 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
                                                 }
                                         );
                                         mCameraCallbacks.onSaveCompletion(true);
+                                        if (mCameraCharacteristics.getCameraExposure() == CameraExposure.MAX_EXPOSURE) {
+                                            mCameraCallbacks.sendDataToAPI(true);
+                                        }
                                     }
                                 });
                             } else {
