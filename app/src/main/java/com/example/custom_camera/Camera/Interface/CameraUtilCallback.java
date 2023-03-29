@@ -10,4 +10,5 @@ public interface CameraUtilCallback {
     void onSaveCompletion(boolean isSaved);
 
     void sendDataToAPI(boolean sendData);
+    void saveDefaultImagePath(String path);
 }

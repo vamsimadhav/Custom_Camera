@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,9 +21,15 @@ import com.example.custom_camera.Camera.Helper.HiddenCameraUtils;
 import com.example.custom_camera.Camera.HiddenCameraActivity;
 import com.example.custom_camera.Camera.Model.CameraCharacteristics;
 import com.example.custom_camera.Camera.Model.CameraError;
+import com.example.custom_camera.Helpers.Utils;
+import com.example.custom_camera.Networking.APIHelpers;
+import com.example.custom_camera.Networking.Models.UserTokens;
+import com.example.custom_camera.Networking.NetworkCallback;
 import com.example.custom_camera.R;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +37,6 @@ public class CameraActivityTwo extends HiddenCameraActivity {
 
     private static final int REQ_CODE_CAMERA_PERMISSION = 1253;
     private CameraCharacteristics mCameraCharacteristics;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,6 +128,11 @@ public class CameraActivityTwo extends HiddenCameraActivity {
 
     @Override
     public void sendDataToAPI(boolean sendData) {
-//        Do nothing
+
+    }
+
+    @Override
+    public void saveDefaultImagePath(String path) {
+
     }
 }

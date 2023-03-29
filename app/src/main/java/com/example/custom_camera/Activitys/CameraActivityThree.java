@@ -7,8 +7,11 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -27,16 +30,22 @@ import com.example.custom_camera.Camera.Helper.HiddenCameraUtils;
 import com.example.custom_camera.Camera.HiddenCameraActivity;
 import com.example.custom_camera.Camera.Model.CameraCharacteristics;
 import com.example.custom_camera.Camera.Model.CameraError;
+import com.example.custom_camera.Helpers.Utils;
 import com.example.custom_camera.Networking.APICaller;
+import com.example.custom_camera.Networking.APIHelpers;
 import com.example.custom_camera.Networking.Models.User;
 import com.example.custom_camera.Networking.Models.UserTokens;
+import com.example.custom_camera.Networking.NetworkCallback;
 import com.example.custom_camera.Networking.RetrofitClient;
 import com.example.custom_camera.R;
 
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,7 +60,7 @@ public class CameraActivityThree extends HiddenCameraActivity {
     private int mCurrentIndex = 0;
     private static final String text = "Capturing Image for Exposure: ";
     private TextView exposureText;
-    private UserTokens userTokens;
+    private String defaultImagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,26 +156,30 @@ public class CameraActivityThree extends HiddenCameraActivity {
 
     @Override
     public void sendDataToAPI(boolean sendData) {
-        APICaller apiCaller = RetrofitClient.getInstance().create(APICaller.class);
-        Call<User> call = apiCaller.getSignInInfo("amit_4@test.com","12345678");
-        call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                userTokens = new UserTokens(
-                        response.headers().get("Content-Type"),
-                        response.headers().get("access-token"),
-                        response.headers().get("uid"),
-                        response.headers().get("client")
-                );
-            }
 
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Log.e("onFailure ",t.getMessage());
-            }
-        });
+        if (sendData) {
+            APIHelpers.authenticateApp(new NetworkCallback() {
+                @Override
+                public void authenticateTokens(UserTokens userTokens) {
+                    String savedImage = "";
+                    Date currentDate = new Date();
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    String dateString = dateFormat.format(currentDate);
+                    Bitmap bitmap = Utils.getBitmapFromPath(defaultImagePath);
+                    if (bitmap != null) {
+                        savedImage = Utils.convertBitMapToBase64(bitmap);
+                    }
+//                   APIHelpers.sendImageToServer(userTokens,dateString,savedImage);
+                }
+            });
+        }
 
 
+    }
+
+    @Override
+    public void saveDefaultImagePath(String path) {
+        defaultImagePath = path;
     }
 
     private ArrayList<CameraCharacteristics> buildParameters() {
@@ -187,4 +200,6 @@ public class CameraActivityThree extends HiddenCameraActivity {
         }
         return list;
     }
+
+
 }

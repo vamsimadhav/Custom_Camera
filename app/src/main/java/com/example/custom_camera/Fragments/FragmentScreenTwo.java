@@ -59,7 +59,7 @@ public class FragmentScreenTwo extends Fragment {
         if (showTimer) {
             barTimer.setVisibility(View.VISIBLE);
             textTimer.setVisibility(View.VISIBLE);
-            startTimer(5);
+            startTimer(1);
             showTimer = false;
         }
         super.onResume();

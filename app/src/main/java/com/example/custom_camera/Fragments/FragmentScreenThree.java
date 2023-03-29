@@ -3,10 +3,12 @@ package com.example.custom_camera.Fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.custom_camera.R;
 
@@ -62,7 +64,13 @@ public class FragmentScreenThree extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView =  inflater.inflate(R.layout.fragment_screen_three, container, false);
-
+        Button btnCapture = rootView.findViewById(R.id.gotoCameraBtn);
+        btnCapture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(view).navigate(R.id.cameraActivityThree);
+            }
+        });
         return rootView;
     }
 }
