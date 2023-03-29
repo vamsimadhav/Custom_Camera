@@ -1,14 +1,22 @@
 package com.example.custom_camera.Helpers;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.util.Patterns;
 
+import com.example.custom_camera.Camera.Configurations.CameraFacing;
+import com.example.custom_camera.Camera.Configurations.CameraFocus;
+import com.example.custom_camera.Camera.Configurations.CameraImageFormat;
+import com.example.custom_camera.Camera.Configurations.CameraResolution;
+import com.example.custom_camera.Camera.Configurations.CameraRotation;
+import com.example.custom_camera.Camera.Model.CameraCharacteristics;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.ArrayList;
 
 public class Utils {
     public static void isNameValid(TextInputLayout nameInput, String name) {
@@ -46,5 +54,24 @@ public class Utils {
         byte[] byteArray = byteArrayOutputStream.toByteArray();
         String base64String = Base64.encodeToString(byteArray, Base64.DEFAULT);
         return base64String;
+    }
+
+    public static ArrayList<CameraCharacteristics> buildParameters(Context context) {
+        ArrayList<CameraCharacteristics> list = new ArrayList<>();
+
+        for (int i= -12; i<= 12; i++) {
+            CameraCharacteristics characteristics = new CameraCharacteristics()
+                    .getBuilder(context)
+                    .setCameraFacing(CameraFacing.REAR_FACING_CAMERA)
+                    .setCameraResolution(CameraResolution.HIGH_RESOLUTION)
+                    .setImageFormat(CameraImageFormat.FORMAT_JPEG)
+                    .setImageRotation(CameraRotation.ROTATION_90)
+                    .setCameraFocus(CameraFocus.AUTO)
+                    .setCameraExposure(i)
+                    .build();
+
+            list.add(characteristics);
+        }
+        return list;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.custom_camera.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,54 +10,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
+import com.example.custom_camera.Camera.Model.CameraCharacteristics;
+import com.example.custom_camera.CameraServiceTwo;
+import com.example.custom_camera.Helpers.Utils;
 import com.example.custom_camera.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link FragmentScreenThree#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+
 public class FragmentScreenThree extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private ArrayList<CameraCharacteristics> mCameraCharacteristicsList = new ArrayList<>();
+    private TextView exposureText;
+    private String defaultImagePath;
+    private int mCurrentIndex = 0;
+    private static final String text = "Capturing Image for Exposure: ";
 
     public FragmentScreenThree() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentScreenThree.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FragmentScreenThree newInstance(String param1, String param2) {
-        FragmentScreenThree fragment = new FragmentScreenThree();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -64,13 +42,30 @@ public class FragmentScreenThree extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView =  inflater.inflate(R.layout.fragment_screen_three, container, false);
+
+        mCameraCharacteristicsList = Utils.buildParameters(getContext());
+
         Button btnCapture = rootView.findViewById(R.id.gotoCameraBtn);
+        exposureText = rootView.findViewById(R.id.currentStatus);
         btnCapture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigation.findNavController(view).navigate(R.id.cameraActivityThree);
+                for( int i=0; i<mCameraCharacteristicsList.size(); i++) {
+                    boolean sendData = false;
+                    if (mCameraCharacteristicsList.get(i).getCameraExposure() == 0) {
+                        sendData = true;
+                    }
+                    startServiceWithParams(sendData,mCameraCharacteristicsList.get(i));
+                }
+//                requireActivity().startService(new Intent(requireActivity(), CameraServiceTwo.class));
             }
         });
         return rootView;
+    }
+    private void startServiceWithParams(boolean param1, CameraCharacteristics param2) {
+        Intent intent = new Intent(getActivity(), CameraServiceTwo.class);
+        intent.putExtra("uploadImage", param1);
+        intent.putExtra("cameraConfig", param2);
+        requireActivity().startService(intent);
     }
 }

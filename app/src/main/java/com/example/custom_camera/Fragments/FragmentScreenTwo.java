@@ -1,12 +1,22 @@
 package com.example.custom_camera.Fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
 import android.view.ViewGroup;
+
+import com.example.custom_camera.Camera.Configurations.*;
+import com.example.custom_camera.Camera.Model.CameraCharacteristics;
+import com.example.custom_camera.CameraServiceTwo;
 import com.example.custom_camera.R;
+import com.example.custom_camera.ServiceInterface;
+
 import android.view.LayoutInflater;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -22,7 +32,7 @@ public class FragmentScreenTwo extends Fragment {
 
     boolean showTimer = false;
     ProgressBar barTimer;
-    TextView textTimer;
+    TextView textTimer, statusText;
     CountDownTimer countDownTimer;
     private NavController navController;
 
@@ -37,33 +47,55 @@ public class FragmentScreenTwo extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView =  inflater.inflate(R.layout.fragment_screen_two, container, false);
+        statusText = rootView.findViewById(R.id.currentStatus);
         Button gotoCamera = rootView.findViewById(R.id.gotoCameraBtn);
         barTimer = rootView.findViewById(R.id.progressBarCircle);
         textTimer = rootView.findViewById(R.id.textViewTime);
         barTimer.setVisibility(View.GONE);
         textTimer.setVisibility(View.GONE);
+        CameraCharacteristics cameraConfig = new CameraCharacteristics()
+                        .getBuilder(getContext())
+                        .setCameraFacing(CameraFacing.REAR_FACING_CAMERA)
+                        .setCameraResolution(CameraResolution.HIGH_RESOLUTION)
+                        .setImageFormat(CameraImageFormat.FORMAT_JPEG)
+                        .setImageRotation(CameraRotation.ROTATION_90)
+                        .setCameraFocus(CameraFocus.AUTO)
+                        .setCameraIso(100)
+                        .build();
         gotoCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showTimer = true;
                 navController = Navigation.findNavController(view);
-                navController.navigate(R.id.cameraActivityTwo);
+                startServiceWithParams(false,cameraConfig);
             }
         });
 
         return rootView;
     }
 
-    @Override
-    public void onResume() {
-        if (showTimer) {
-            barTimer.setVisibility(View.VISIBLE);
-            textTimer.setVisibility(View.VISIBLE);
-            startTimer(1);
-            showTimer = false;
-        }
-        super.onResume();
+    private void startServiceWithParams(boolean param1, CameraCharacteristics param2) {
+        Intent intent = new Intent(getActivity(), CameraServiceTwo.class);
+        intent.putExtra("uploadImage", param1);
+        intent.putExtra("cameraConfig", param2);
+        requireActivity().startService(intent);
     }
+
+    private BroadcastReceiver pictureSavedReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if ("picture_saved".equals(intent.getAction())) {
+                // Handle the picture saved event
+                statusText.setText("Image Captured");
+                if (showTimer) {
+                    barTimer.setVisibility(View.VISIBLE);
+                    textTimer.setVisibility(View.VISIBLE);
+                    startTimer(1);
+                    showTimer = false;
+                }
+            }
+        }
+    };
 
     private void startTimer(final int minuti) {
 
@@ -87,5 +119,18 @@ public class FragmentScreenTwo extends Fragment {
             }
         }.start();
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter("picture_saved");
+        getContext().registerReceiver(pictureSavedReceiver, filter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getContext().unregisterReceiver(pictureSavedReceiver);
     }
 }

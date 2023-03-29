@@ -19,17 +19,9 @@
         android:label="fragment_screen_two"
         tools:layout="@layout/fragment_screen_two" >
         <action
-            android:id="@+id/action_fragmentScreenTwo_to_cameraActivityTwo"
-            app:destination="@id/cameraActivityTwo" />
-        <action
             android:id="@+id/action_fragmentScreenTwo_to_fragmentScreenThree"
             app:destination="@id/fragmentScreenThree" />
     </fragment>
-    <activity
-        android:id="@+id/cameraActivityTwo"
-        android:name="com.example.custom_camera.Activitys.CameraActivityTwo"
-        android:label="activity_camera_two"
-        tools:layout="@layout/activity_camera_two" />
     <fragment
         android:id="@+id/fragmentScreenThree"
         android:name="com.example.custom_camera.Fragments.FragmentScreenThree"

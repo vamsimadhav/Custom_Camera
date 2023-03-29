@@ -67,7 +67,7 @@ public class CameraActivityThree extends HiddenCameraActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera_three);
 
-        mCameraCharacteristicsList = buildParameters();
+//        mCameraCharacteristicsList = Utils.buildParameters();
 
         exposureText = findViewById(R.id.exposureText);
 
@@ -182,24 +182,7 @@ public class CameraActivityThree extends HiddenCameraActivity {
         defaultImagePath = path;
     }
 
-    private ArrayList<CameraCharacteristics> buildParameters() {
-        ArrayList<CameraCharacteristics> list = new ArrayList<>();
 
-        for (int i= -12; i<= 12; i++) {
-            CameraCharacteristics characteristics = new CameraCharacteristics()
-                    .getBuilder(this)
-                    .setCameraFacing(CameraFacing.REAR_FACING_CAMERA)
-                    .setCameraResolution(CameraResolution.HIGH_RESOLUTION)
-                    .setImageFormat(CameraImageFormat.FORMAT_JPEG)
-                    .setImageRotation(CameraRotation.ROTATION_90)
-                    .setCameraFocus(CameraFocus.AUTO)
-                    .setCameraExposure(i)
-                    .build();
-
-            list.add(characteristics);
-        }
-        return list;
-    }
 
 
 }
