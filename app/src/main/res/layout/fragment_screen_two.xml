@@ -27,7 +27,7 @@
             android:layout_marginBottom="16dp"
             android:layout_gravity="center_horizontal"
             android:text="Go to Camera" />
-        
+
         <RelativeLayout
             android:id="@+id/activity_main"
             android:layout_width="match_parent"
@@ -40,11 +40,9 @@
             android:layout_width="270dp"
             android:layout_height="270dp"
             android:layout_centerInParent="true"
-            android:background="@drawable/circle_dark_blue"
+            android:background="@drawable/circle_yellow"
             android:indeterminate="false"
-            android:max="100"
-            android:progress="100"
-            android:progressDrawable="@drawable/circle_yellow"
+            android:progressDrawable="@drawable/circle_dark_blue"
             android:rotation="-90" />
 
             <TextView
@@ -52,8 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="00:01:00"
-                android:textColor="@color/colorYellow"
+                android:textColor="@color/black"
                 android:textSize="40sp" />
         </RelativeLayout>
 

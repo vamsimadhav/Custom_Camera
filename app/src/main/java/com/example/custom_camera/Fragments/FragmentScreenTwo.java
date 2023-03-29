@@ -1,5 +1,6 @@
 package com.example.custom_camera.Fragments;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 public class FragmentScreenTwo extends Fragment {
@@ -22,6 +24,7 @@ public class FragmentScreenTwo extends Fragment {
     ProgressBar barTimer;
     TextView textTimer;
     CountDownTimer countDownTimer;
+    private NavController navController;
 
 
     @Override
@@ -37,11 +40,14 @@ public class FragmentScreenTwo extends Fragment {
         Button gotoCamera = rootView.findViewById(R.id.gotoCameraBtn);
         barTimer = rootView.findViewById(R.id.progressBarCircle);
         textTimer = rootView.findViewById(R.id.textViewTime);
+        barTimer.setVisibility(View.GONE);
+        textTimer.setVisibility(View.GONE);
         gotoCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showTimer = true;
-                Navigation.findNavController(view).navigate(R.id.cameraActivityTwo);
+                navController = Navigation.findNavController(view);
+                navController.navigate(R.id.cameraActivityTwo);
             }
         });
 
@@ -51,6 +57,8 @@ public class FragmentScreenTwo extends Fragment {
     @Override
     public void onResume() {
         if (showTimer) {
+            barTimer.setVisibility(View.VISIBLE);
+            textTimer.setVisibility(View.VISIBLE);
             startTimer(5);
             showTimer = false;
         }
@@ -58,6 +66,10 @@ public class FragmentScreenTwo extends Fragment {
     }
 
     private void startTimer(final int minuti) {
+
+        int timeCounter = minuti * 60 *1000;
+        barTimer.setMax(timeCounter);
+
         countDownTimer = new CountDownTimer(60 * minuti * 1000, 5000) {
             // 500 means, onTick function will be called at every 500 milliseconds
 
@@ -71,9 +83,7 @@ public class FragmentScreenTwo extends Fragment {
             }
             @Override
             public void onFinish() {
-                if(textTimer.getText().equals("00:00")){
-                    textTimer.setText("STOP");
-                }
+                navController.navigate(R.id.fragmentScreenThree);
             }
         }.start();
 
