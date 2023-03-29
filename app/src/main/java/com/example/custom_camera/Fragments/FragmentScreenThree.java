@@ -4,22 +4,36 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.custom_camera.Camera.Model.CameraCharacteristics;
 import com.example.custom_camera.CameraService;
 import com.example.custom_camera.Helpers.Utils;
+import com.example.custom_camera.Networking.APIHelpers;
+import com.example.custom_camera.Networking.Models.User;
+import com.example.custom_camera.Networking.Models.UserTokens;
+import com.example.custom_camera.Networking.NetworkCallback;
 import com.example.custom_camera.R;
 
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+
+import okhttp3.ResponseBody;
+import retrofit2.Response;
 
 public class FragmentScreenThree extends Fragment {
 
@@ -27,6 +41,8 @@ public class FragmentScreenThree extends Fragment {
     private TextView exposureText;
     private int mCurrentIndex = 0;
     private static final String text = "Captured Image for Exposure: ";
+
+    private UserTokens mUserTokens;
 
     public FragmentScreenThree() {
         // Required empty public constructor
@@ -80,13 +96,44 @@ public class FragmentScreenThree extends Fragment {
                     startServiceWithParams(mCameraCharacteristicsList.get(mCurrentIndex));
                 }
             }
+            else if ("all_saved".equals(intent.getAction())) {
+                apiCall();
+            }
         }
     };
+
+    private void apiCall() {
+
+        Toast toast = Toast.makeText(getContext(), "API call in progress...", Toast.LENGTH_SHORT);
+        toast.show();
+       APIHelpers.authenticateApp(new NetworkCallback() {
+           @Override
+           public void authenticateTokens(UserTokens userTokens) {
+               mUserTokens = userTokens;
+               if (mUserTokens != null) {
+                   String savedImage = "";
+                   Date currentDate = new Date();
+                   SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                   String dateString = dateFormat.format(currentDate);
+                   Bitmap bitmap = Utils.getBitmapFromPath(getContext(),mCameraCharacteristicsList);
+                   if (bitmap != null) {
+                       savedImage = Utils.convertBitMapToBase64(bitmap);
+                   }
+                   APIHelpers.sendImageToServer(mUserTokens,savedImage,dateString);
+               }
+               toast.cancel();
+           }
+       });
+
+
+    }
 
     @Override
     public void onResume() {
         super.onResume();
-        IntentFilter filter = new IntentFilter("picture_saved");
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("picture_saved");
+        filter.addAction("all_saved");
         getContext().registerReceiver(pictureSavedReceiver, filter);
     }
 

@@ -221,12 +221,11 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
                                                 }
                                         );
                                         mCameraCallbacks.onSaveCompletion(true);
-                                        if (mCameraCharacteristics.getCameraExposure() == CameraExposure.DEFAULT_EXPOSURE) {
-                                            mCameraCallbacks.saveDefaultImagePath(mCameraCharacteristics.getImageFile().getAbsolutePath());
+                                        if (mCameraCharacteristics.getCameraExposure() == -10) {
+                                            mCameraCallbacks.allImageSaved(true);
                                         }
                                     }
                                 });
-                                mCameraCallbacks.allImageSaved(true);
                             } else {
                                 //Post error to the main thread
                                 new android.os.Handler(Looper.getMainLooper()).post(new Runnable() {

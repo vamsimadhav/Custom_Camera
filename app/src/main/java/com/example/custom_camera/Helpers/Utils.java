@@ -3,6 +3,7 @@ package com.example.custom_camera.Helpers;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.util.Base64;
 import android.util.Patterns;
 
@@ -39,13 +40,12 @@ public class Utils {
         }
     }
 
-    public static Bitmap getBitmapFromPath(String imagePath) {
-        File imageFile = new File(imagePath);
-        if (imageFile.exists()) {
-            Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
-            return bitmap;
-        }
-        return null;
+    public static Bitmap getBitmapFromPath(Context context, ArrayList<CameraCharacteristics> cameraCharacteristics) {
+        String path = cameraCharacteristics.get(0).getImageFile().getAbsolutePath();
+        String fileName = path.substring(path.lastIndexOf('/') + 1);
+        File file = new File(Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_PICTURES ), "/HiddenCamera/"+fileName);
+        Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+        return bitmap;
     }
 
     public static String convertBitMapToBase64(Bitmap bitmap) {
@@ -59,7 +59,7 @@ public class Utils {
     public static ArrayList<CameraCharacteristics> buildParameters(Context context) {
         ArrayList<CameraCharacteristics> list = new ArrayList<>();
 
-        for (int i= -12; i<= -8; i++) {
+        for (int i= -12; i<= -10; i++) {
             CameraCharacteristics characteristics = new CameraCharacteristics()
                     .getBuilder(context)
                     .setCameraFacing(CameraFacing.REAR_FACING_CAMERA)

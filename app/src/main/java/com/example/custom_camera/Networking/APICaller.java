@@ -18,7 +18,7 @@ public interface APICaller {
 
     @FormUrlEncoded
     @POST("api/v1/auth/sign_in")
-    Call<User> getSignInInfo(@Field("email") String email, @Field("password") String password);
+    Call<ResponseBody> getSignInInfo(@Field("email") String email, @Field("password") String password);
 
     @POST("api/v1/tests")
     Call<ResponseBody> sendImageData(

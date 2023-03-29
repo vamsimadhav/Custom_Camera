@@ -11,20 +11,12 @@ import android.Manifest;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
-
-import com.example.custom_camera.Activitys.ImageUpload;
 import com.example.custom_camera.Camera.Helper.HiddenCameraUtils;
 import com.example.custom_camera.Camera.HiddenCameraService;
 import com.example.custom_camera.Camera.Model.CameraCharacteristics;
 import com.example.custom_camera.Camera.Model.CameraError;
-import com.example.custom_camera.Helpers.Utils;
-import com.example.custom_camera.Networking.APIHelpers;
-import com.example.custom_camera.Networking.Models.UserTokens;
-import com.example.custom_camera.Networking.NetworkCallback;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class CameraService extends HiddenCameraService {
 
@@ -130,40 +122,12 @@ public class CameraService extends HiddenCameraService {
     }
 
     @Override
-    public void sendDataToAPI(boolean sendData) {
-//        if (sendData) {
-//            APIHelpers.authenticateApp(new NetworkCallback() {
-//                @Override
-//                public void authenticateTokens(UserTokens userTokens) {
-//                    String msg = userTokens.getClient() +":" +userTokens.getAccessToken()+":" +userTokens.getUid();
-//                    Log.d("API",msg);
-//                    String savedImage = "";
-//                    Date currentDate = new Date();
-//                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//                    String dateString = dateFormat.format(currentDate);
-//                    Bitmap bitmap = Utils.getBitmapFromPath(defaultImagePath);
-//                    if (bitmap != null) {
-//                        savedImage = Utils.convertBitMapToBase64(bitmap);
-//                    }
-////                   APIHelpers.sendImageToServer(userTokens,dateString,savedImage);
-//                }
-//            });
-//        }
-    }
-
-    @Override
-    public void saveDefaultImagePath(String path) {
-        defaultImagePath = path;
-    }
-
-    @Override
     public void allImageSaved(boolean b) {
-//        if (b) {
-//            Intent i = new Intent(this, ImageUpload.class);
-//            i.putExtra("defaultImage",defaultImagePath);
-//            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            startActivity(i);
-//        }
+        if (b) {
+            Intent a = new Intent("all_saved");
+            a.putExtra("imagePath",defaultImagePath);
+            sendBroadcast(a);
+        }
 
     }
 }
