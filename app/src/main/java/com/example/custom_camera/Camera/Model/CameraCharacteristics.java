@@ -13,7 +13,7 @@ import com.example.custom_camera.Camera.Configurations.*;
 
 import java.io.File;
 
-public class CameraCharacteristics implements Parcelable {
+public class CameraCharacteristics {
     private Context mContext;
 
     @CameraResolution.SupportedResolution
@@ -42,29 +42,6 @@ public class CameraCharacteristics implements Parcelable {
     public CameraCharacteristics() {
         // Do nothing
     }
-
-
-    protected CameraCharacteristics(Parcel in) {
-        mResolution = in.readInt();
-        mFacing = in.readInt();
-        mImageFormat = in.readInt();
-        mImageRotation = in.readInt();
-        mCameraFocus = in.readInt();
-        mCameraExposure = in.readInt();
-        mCameraIso = in.readInt();
-    }
-
-    public static final Creator<CameraCharacteristics> CREATOR = new Creator<CameraCharacteristics>() {
-        @Override
-        public CameraCharacteristics createFromParcel(Parcel in) {
-            return new CameraCharacteristics(in);
-        }
-
-        @Override
-        public CameraCharacteristics[] newArray(int size) {
-            return new CameraCharacteristics[size];
-        }
-    };
 
     public Builder getBuilder(Context context) {
         mContext = context;
@@ -112,22 +89,6 @@ public int getCameraExposure() { return mCameraExposure;}
     @CameraRotation.SupportedRotation
     public int getImageRotation() {
         return mImageRotation;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(@NonNull Parcel parcel, int i) {
-        parcel.writeInt(mResolution);
-        parcel.writeInt(mFacing);
-        parcel.writeInt(mImageFormat);
-        parcel.writeInt(mImageRotation);
-        parcel.writeInt(mCameraFocus);
-        parcel.writeInt(mCameraExposure);
-        parcel.writeInt(mCameraIso);
     }
 
     public class Builder {

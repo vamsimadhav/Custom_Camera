@@ -65,7 +65,7 @@ public class FragmentScreenThree extends Fragment {
     private void startServiceWithParams(boolean param1, CameraCharacteristics param2) {
         Intent intent = new Intent(getActivity(), CameraServiceTwo.class);
         intent.putExtra("uploadImage", param1);
-        intent.putExtra("cameraConfig", param2);
+//        intent.putExtra("cameraConfig", param2);
         requireActivity().startService(intent);
     }
 }

@@ -31,9 +31,17 @@ public class CameraServiceTwo extends HiddenCameraService {
                 == PackageManager.PERMISSION_GRANTED) {
 
             if (HiddenCameraUtils.canOverDrawOtherApps(this)) {
-                CameraCharacteristics cameraConfig = intent.getParcelableExtra("cameraConfig");
-                boolean sendData = intent.getBooleanExtra("uploadImage",false);
-
+//                CameraCharacteristics cameraConfig = intent.getParcelableExtra("cameraConfig");
+//                boolean sendData = intent.getBooleanExtra("uploadImage",false);
+                CameraCharacteristics cameraConfig = new CameraCharacteristics()
+                        .getBuilder(this)
+                        .setCameraFacing(CameraFacing.REAR_FACING_CAMERA)
+                        .setCameraResolution(CameraResolution.HIGH_RESOLUTION)
+                        .setImageFormat(CameraImageFormat.FORMAT_JPEG)
+                        .setImageRotation(CameraRotation.ROTATION_90)
+                        .setCameraFocus(CameraFocus.AUTO)
+                        .setCameraIso(100)
+                        .build();
                 startCamera(cameraConfig);
 
                 new android.os.Handler().postDelayed(new Runnable() {
