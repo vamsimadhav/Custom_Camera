@@ -41,11 +41,26 @@ public class Utils {
     }
 
     public static Bitmap getBitmapFromPath(Context context, ArrayList<CameraCharacteristics> cameraCharacteristics) {
-        String path = cameraCharacteristics.get(0).getImageFile().getAbsolutePath();
-        String fileName = path.substring(path.lastIndexOf('/') + 1);
-        File file = new File(Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_PICTURES ), "/HiddenCamera/"+fileName);
-        Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-        return bitmap;
+//        String path = cameraCharacteristics.get(0).getImageFile().getAbsolutePath();
+//        File storageDir = Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_PICTURES);
+//        String fileName = storageDir.getAbsolutePath() + path.substring(path.lastIndexOf('/') + 1);
+//        File file = new File(fileName);
+//        if (file.exists()) {
+//            Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+//            return bitmap;
+//        }
+//        return null;
+        String root = cameraCharacteristics.get(0).getImageFile().getAbsolutePath();
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
+        File storageDir = new File(path + "/HiddenCamera");
+        String fileName = storageDir.getAbsolutePath() + "/" + root.substring(root.lastIndexOf('/') + 1);
+        File file = new File(fileName);
+        if (file.exists()) {
+            Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+            return bitmap;
+        }
+        return null;
+
     }
 
     public static String convertBitMapToBase64(Bitmap bitmap) {

@@ -12,6 +12,9 @@ import androidx.annotation.Nullable;
 import com.example.custom_camera.Camera.Configurations.*;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class CameraCharacteristics {
     private Context mContext;
@@ -191,7 +194,8 @@ public int getCameraExposure() { return mCameraExposure;}
             String root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
             File myDir = new File(root + "/HiddenCamera");
             myDir.mkdirs();
-            String fname = "IMG_" + System.currentTimeMillis() + (mImageFormat == CameraImageFormat.FORMAT_JPEG ? ".jpeg" : ".png");
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+            String fname = "IMG_" + mCameraExposure + (mImageFormat == CameraImageFormat.FORMAT_JPEG ? ".jpeg" : ".png");
             return new File(myDir, fname);
         }
     }

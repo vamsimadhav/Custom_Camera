@@ -97,6 +97,7 @@ public class FragmentScreenThree extends Fragment {
                 }
             }
             else if ("all_saved".equals(intent.getAction())) {
+                exposureText.setText("Sending Image to Server");
                 apiCall();
             }
         }
@@ -111,15 +112,15 @@ public class FragmentScreenThree extends Fragment {
            public void authenticateTokens(UserTokens userTokens) {
                mUserTokens = userTokens;
                if (mUserTokens != null) {
-                   String savedImage = "";
-                   Date currentDate = new Date();
-                   SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                   String dateString = dateFormat.format(currentDate);
-                   Bitmap bitmap = Utils.getBitmapFromPath(getContext(),mCameraCharacteristicsList);
-                   if (bitmap != null) {
-                       savedImage = Utils.convertBitMapToBase64(bitmap);
-                   }
-                   APIHelpers.sendImageToServer(mUserTokens,savedImage,dateString);
+//                   String savedImage = "";
+//                   Date currentDate = new Date();
+//                   SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//                   String dateString = dateFormat.format(currentDate);
+//                   Bitmap bitmap = Utils.getBitmapFromPath(getContext(),mCameraCharacteristicsList);
+//                   if (bitmap != null) {
+//                       savedImage = Utils.convertBitMapToBase64(bitmap);
+//                   }
+//                   APIHelpers.sendImageToServer(mUserTokens,savedImage,dateString);
                }
                toast.cancel();
            }
