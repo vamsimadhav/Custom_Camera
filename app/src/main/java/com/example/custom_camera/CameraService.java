@@ -2,7 +2,9 @@ package com.example.custom_camera;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 import android.Manifest;
 
@@ -10,15 +12,24 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 
-import com.example.custom_camera.Camera.Configurations.*;
+import com.example.custom_camera.Activitys.ImageUpload;
 import com.example.custom_camera.Camera.Helper.HiddenCameraUtils;
 import com.example.custom_camera.Camera.HiddenCameraService;
 import com.example.custom_camera.Camera.Model.CameraCharacteristics;
 import com.example.custom_camera.Camera.Model.CameraError;
+import com.example.custom_camera.Helpers.Utils;
+import com.example.custom_camera.Networking.APIHelpers;
+import com.example.custom_camera.Networking.Models.UserTokens;
+import com.example.custom_camera.Networking.NetworkCallback;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-public class CameraServiceTwo extends HiddenCameraService {
+public class CameraService extends HiddenCameraService {
+
+    private String defaultImagePath;
+    private boolean checkData;
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -32,15 +43,23 @@ public class CameraServiceTwo extends HiddenCameraService {
 
             if (HiddenCameraUtils.canOverDrawOtherApps(this)) {
 //                CameraCharacteristics cameraConfig = intent.getParcelableExtra("cameraConfig");
-//                boolean sendData = intent.getBooleanExtra("uploadImage",false);
+//                checkData = intent.getBooleanExtra("uploadImage",false);
+                int exposure = intent.getIntExtra("exposure",0);
+                int iso = intent.getIntExtra("iso",100);
+                int facing = intent.getIntExtra("facing",0);
+                int focus = intent.getIntExtra("focus", 0);
+                int imageFormat = intent.getIntExtra("imageFormat",123);
+                int resolution = intent.getIntExtra("resolution",5678);
+                int rotation = intent.getIntExtra("rotation",0);
                 CameraCharacteristics cameraConfig = new CameraCharacteristics()
                         .getBuilder(this)
-                        .setCameraFacing(CameraFacing.REAR_FACING_CAMERA)
-                        .setCameraResolution(CameraResolution.HIGH_RESOLUTION)
-                        .setImageFormat(CameraImageFormat.FORMAT_JPEG)
-                        .setImageRotation(CameraRotation.ROTATION_90)
-                        .setCameraFocus(CameraFocus.AUTO)
-                        .setCameraIso(100)
+                        .setCameraFacing(facing)
+                        .setCameraResolution(resolution)
+                        .setImageFormat(imageFormat)
+                        .setImageRotation(rotation)
+                        .setCameraFocus(focus)
+                        .setCameraExposure(exposure)
+                        .setCameraIso(iso)
                         .build();
                 startCamera(cameraConfig);
 
@@ -107,13 +126,44 @@ public class CameraServiceTwo extends HiddenCameraService {
             Intent intent = new Intent("picture_saved");
             sendBroadcast(intent);
         }
+        stopSelf();
     }
 
     @Override
     public void sendDataToAPI(boolean sendData) {
+//        if (sendData) {
+//            APIHelpers.authenticateApp(new NetworkCallback() {
+//                @Override
+//                public void authenticateTokens(UserTokens userTokens) {
+//                    String msg = userTokens.getClient() +":" +userTokens.getAccessToken()+":" +userTokens.getUid();
+//                    Log.d("API",msg);
+//                    String savedImage = "";
+//                    Date currentDate = new Date();
+//                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//                    String dateString = dateFormat.format(currentDate);
+//                    Bitmap bitmap = Utils.getBitmapFromPath(defaultImagePath);
+//                    if (bitmap != null) {
+//                        savedImage = Utils.convertBitMapToBase64(bitmap);
+//                    }
+////                   APIHelpers.sendImageToServer(userTokens,dateString,savedImage);
+//                }
+//            });
+//        }
     }
 
     @Override
     public void saveDefaultImagePath(String path) {
+        defaultImagePath = path;
+    }
+
+    @Override
+    public void allImageSaved(boolean b) {
+//        if (b) {
+//            Intent i = new Intent(this, ImageUpload.class);
+//            i.putExtra("defaultImage",defaultImagePath);
+//            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            startActivity(i);
+//        }
+
     }
 }

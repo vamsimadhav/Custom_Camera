@@ -27,11 +27,12 @@
         android:name="com.example.custom_camera.Fragments.FragmentScreenThree"
         android:label="FragmentScreenThree" >
         <action
-            android:id="@+id/action_fragmentScreenThree_to_cameraActivityThree"
-            app:destination="@id/cameraActivityThree" />
+            android:id="@+id/action_fragmentScreenThree_to_imageUpload"
+            app:destination="@id/imageUpload" />
     </fragment>
     <activity
-        android:id="@+id/cameraActivityThree"
-        android:name="com.example.custom_camera.Activitys.CameraActivityThree"
-        android:label="CameraActivityThree" />
+        android:id="@+id/imageUpload"
+        android:name="com.example.custom_camera.Activitys.ImageUpload"
+        android:label="activity_image_upload"
+        tools:layout="@layout/activity_image_upload" />
 </navigation>

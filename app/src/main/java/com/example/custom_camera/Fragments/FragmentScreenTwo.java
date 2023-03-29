@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -13,9 +12,8 @@ import android.view.ViewGroup;
 
 import com.example.custom_camera.Camera.Configurations.*;
 import com.example.custom_camera.Camera.Model.CameraCharacteristics;
-import com.example.custom_camera.CameraServiceTwo;
+import com.example.custom_camera.CameraService;
 import com.example.custom_camera.R;
-import com.example.custom_camera.ServiceInterface;
 
 import android.view.LayoutInflater;
 import android.widget.ProgressBar;
@@ -75,7 +73,7 @@ public class FragmentScreenTwo extends Fragment {
     }
 
     private void startServiceWithParams(boolean param1, CameraCharacteristics param2) {
-        Intent intent = new Intent(getActivity(), CameraServiceTwo.class);
+        Intent intent = new Intent(getActivity(), CameraService.class);
         intent.putExtra("uploadImage", param1);
 //        intent.putExtra("cameraConfig", param2);
         requireActivity().startService(intent);
