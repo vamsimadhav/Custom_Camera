@@ -50,7 +50,7 @@ public class Utils {
 //            return bitmap;
 //        }
 //        return null;
-        String root = cameraCharacteristics.get(0).getImageFile().getAbsolutePath();
+        String root = cameraCharacteristics.get(13).getImageFile().getAbsolutePath();
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
         File storageDir = new File(path + "/HiddenCamera");
         String fileName = storageDir.getAbsolutePath() + "/" + root.substring(root.lastIndexOf('/') + 1);
@@ -74,7 +74,7 @@ public class Utils {
     public static ArrayList<CameraCharacteristics> buildParameters(Context context) {
         ArrayList<CameraCharacteristics> list = new ArrayList<>();
 
-        for (int i= -12; i<= -10; i++) {
+        for (int i= -12; i<= 12; i++) {
             CameraCharacteristics characteristics = new CameraCharacteristics()
                     .getBuilder(context)
                     .setCameraFacing(CameraFacing.REAR_FACING_CAMERA)

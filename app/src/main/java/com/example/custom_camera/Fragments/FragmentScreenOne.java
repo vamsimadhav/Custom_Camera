@@ -128,7 +128,7 @@ public class FragmentScreenOne extends Fragment {
                             databaseHelper.userDataDAO().addUserData(userData);
                         }
                     }
-                    Navigation.findNavController(view).navigate(R.id.fragmentScreenThree);
+                    Navigation.findNavController(view).navigate(R.id.fragmentScreenTwo);
                 }
             }
         });

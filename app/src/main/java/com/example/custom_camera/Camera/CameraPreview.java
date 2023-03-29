@@ -221,7 +221,7 @@ class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
                                                 }
                                         );
                                         mCameraCallbacks.onSaveCompletion(true);
-                                        if (mCameraCharacteristics.getCameraExposure() == -10) {
+                                        if (mCameraCharacteristics.getCameraExposure() == 12) {
                                             mCameraCallbacks.allImageSaved(true);
                                         }
                                     }
