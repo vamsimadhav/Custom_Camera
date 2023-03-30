@@ -6,15 +6,9 @@ import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.util.Base64;
 import android.util.Patterns;
-
-import com.example.custom_camera.Camera.Configurations.CameraFacing;
-import com.example.custom_camera.Camera.Configurations.CameraFocus;
-import com.example.custom_camera.Camera.Configurations.CameraImageFormat;
-import com.example.custom_camera.Camera.Configurations.CameraResolution;
-import com.example.custom_camera.Camera.Configurations.CameraRotation;
+import com.example.custom_camera.Camera.Configurations.*;
 import com.example.custom_camera.Camera.Model.CameraCharacteristics;
 import com.google.android.material.textfield.TextInputLayout;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
@@ -41,15 +35,6 @@ public class Utils {
     }
 
     public static Bitmap getBitmapFromPath(Context context, ArrayList<CameraCharacteristics> cameraCharacteristics) {
-//        String path = cameraCharacteristics.get(0).getImageFile().getAbsolutePath();
-//        File storageDir = Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_PICTURES);
-//        String fileName = storageDir.getAbsolutePath() + path.substring(path.lastIndexOf('/') + 1);
-//        File file = new File(fileName);
-//        if (file.exists()) {
-//            Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-//            return bitmap;
-//        }
-//        return null;
         String root = cameraCharacteristics.get(13).getImageFile().getAbsolutePath();
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
         File storageDir = new File(path + "/HiddenCamera");
@@ -58,6 +43,19 @@ public class Utils {
         if (file.exists()) {
             Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
             return bitmap;
+        }
+        return null;
+
+    }
+
+    public static File getFile(Context context, ArrayList<CameraCharacteristics> cameraCharacteristics) {
+        String root = cameraCharacteristics.get(0).getImageFile().getAbsolutePath();
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
+        File storageDir = new File(path + "/HiddenCamera");
+        String fileName = storageDir.getAbsolutePath() + "/" + root.substring(root.lastIndexOf('/') + 1);
+        File file = new File(fileName);
+        if (file.exists()) {
+            return file;
         }
         return null;
 

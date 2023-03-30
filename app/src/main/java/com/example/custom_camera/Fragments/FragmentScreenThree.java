@@ -25,15 +25,8 @@ import com.example.custom_camera.Networking.Models.User;
 import com.example.custom_camera.Networking.Models.UserTokens;
 import com.example.custom_camera.Networking.NetworkCallback;
 import com.example.custom_camera.R;
-
-import org.json.JSONObject;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
-import okhttp3.ResponseBody;
-import retrofit2.Response;
 
 public class FragmentScreenThree extends Fragment {
 
@@ -111,17 +104,20 @@ public class FragmentScreenThree extends Fragment {
            @Override
            public void authenticateTokens(UserTokens userTokens) {
                mUserTokens = userTokens;
-               if (mUserTokens != null) {
-//                   String savedImage = "";
+               //TODO: UPLOADING IMAGE ISSUE
+               exposureText.setText("Testing Failed");
+//               if (mUserTokens != null) {
 //                   Date currentDate = new Date();
 //                   SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 //                   String dateString = dateFormat.format(currentDate);
-//                   Bitmap bitmap = Utils.getBitmapFromPath(getContext(),mCameraCharacteristicsList);
-//                   if (bitmap != null) {
-//                       savedImage = Utils.convertBitMapToBase64(bitmap);
+//                   File file = Utils.getFile(getContext(),mCameraCharacteristicsList);
+//                   if (file != null) {
+//                       Toast.makeText(getContext(), "Uploading Image", Toast.LENGTH_SHORT).show();
+//                       APIHelpers.sendImageToServer(mUserTokens,dateString,file);
+//                   } else {
+//                       Toast.makeText(getContext(), "File is NULL", Toast.LENGTH_SHORT).show();
 //                   }
-//                   APIHelpers.sendImageToServer(mUserTokens,savedImage,dateString);
-               }
+//               }
                toast.cancel();
            }
        });

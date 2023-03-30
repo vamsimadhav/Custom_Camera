@@ -2,12 +2,9 @@ package com.example.custom_camera.Networking;
 
 import android.util.Log;
 
-import com.example.custom_camera.Networking.Models.User;
 import com.example.custom_camera.Networking.Models.UserTokens;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.io.File;
 import java.io.IOException;
 
 import okhttp3.MediaType;
@@ -34,8 +31,6 @@ public class APIHelpers {
                         return;
                     }
 
-//                    String responseText = response.body().toString();
-//                    JSONObject jsonResponse = new JSONObject(responseText);
                     UserTokens userTokens = new UserTokens(
                             response.headers().get("Content-Type"),
                             response.headers().get("access-token"),
@@ -58,48 +53,48 @@ public class APIHelpers {
         });
     }
 
-    public static void sendImageToServer(UserTokens userTokens,String currentDate,String savedImage) {
+    public static void sendImageToServer(UserTokens userTokens, String currentDate, File savedImageFile) {
         APICaller apiCaller = RetrofitClient.getInstance().create(APICaller.class);
 
-        // Prepare Body
+        MultipartBody.Part imagePart = MultipartBody.Part.createFormData(
+                "test[images_attributes][][pic]",
+                "saved_image.jpg",
+                RequestBody.create(MediaType.parse("image/jpeg"), savedImageFile)
+        );
 
-        Call<ResponseBody> call =null;
-        try {
-            RequestBody doneDate = RequestBody.create(MediaType.parse("text/plain"), currentDate);
-            RequestBody batchQrCode = RequestBody.create(MediaType.parse("text/plain"), "AAO");
-            RequestBody reason = RequestBody.create(MediaType.parse("text/plain"), "NA");
-            RequestBody failure = RequestBody.create(MediaType.parse("text/plain"), "false");
-            MultipartBody.Part imagePart = MultipartBody.Part.createFormData("test[images_attributes][][pic]", savedImage);
-            call = apiCaller.sendImageData(userTokens.getContentType(),userTokens.getAccessToken(),userTokens.getUid(),userTokens.getClient(),doneDate,imagePart,batchQrCode,reason,failure);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        RequestBody doneDatePart = RequestBody.create(MediaType.parse("text/plain"), currentDate);
+        RequestBody batchQrCodePart = RequestBody.create(MediaType.parse("text/plain"), "AAO");
+        RequestBody reasonPart = RequestBody.create(MediaType.parse("text/plain"), "NA");
+        RequestBody failurePart = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(false));
 
-        if (call != null) {
-            call .enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    try {
-                        if (response.body() == null) {
-                            if (response.errorBody() != null) {
-                                Log.d("UPLOAD API", response.errorBody().string());
-                            }
-                            Log.d("UPLOAD RESPONSE", response.body().toString());
-                        }
+        Call<ResponseBody> call = apiCaller.sendImageData(
+                "application/json",
+                userTokens.getAccessToken(),
+                userTokens.getUid(),
+                userTokens.getClient(),
+                doneDatePart,
+                imagePart,
+                batchQrCodePart,
+                reasonPart,
+                failurePart);
 
-                    } catch (IOException e) {
-                        Log.d("UPLOAD API ERROR", e.toString());
-                        e.printStackTrace();
-                    }
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    // Handle successful response
+                    Log.d("IMAGE UPLOAD SUCCESS",response.body().toString());
+                } else {
+                    // Handle unsuccessful response
+                    Log.d("IMAGE UPLD NOT SUCCESS",response.body().toString());
                 }
+            }
 
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
 
-                }
-            });
-        }
-
+            }
+        });
 
     }
 }
